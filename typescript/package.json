@@ -1,0 +1,25 @@
+{
+	"name": "p5js",
+	"version": "0.0.0",
+	"scripts": {
+		"build": "node esbuild.js",
+		"_lint": "eslint . --ignore-path .gitignore",
+		"lint": "npm run _lint; npm run _prettier",
+		"lint:fix": "npm run _lint -- --fix; npm run _prettier -- --write",
+		"_prettier": "prettier \".\" --check --ignore-path \".gitignore\""
+	},
+	"dependencies": {
+		"babylonjs": "^6.0.0",
+		"p5": "^1.6.0"
+	},
+	"devDependencies": {
+		"@types/node": "^18.16.1",
+		"@types/p5": "^1.6.1",
+		"esbuild": "^0.17.18",
+		"eslint": "^8.39.0",
+		"eslint-config-prettier": "^8.8.0",
+		"glob": "^10.2.2",
+		"prettier": "^2.8.8",
+		"typescript": "^5.0.4"
+	}
+}
