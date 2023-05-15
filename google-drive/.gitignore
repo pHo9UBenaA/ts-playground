@@ -1,0 +1,8 @@
+.DS_Store
+.env
+.pnpm-store
+token.json
+credentials.json
+node_modules
+dist
+test
