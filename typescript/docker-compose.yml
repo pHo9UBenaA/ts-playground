@@ -1,8 +1,0 @@
-services:
-    node:
-        build:
-            context: .
-            dockerfile: docker/node/Dockerfile
-        tty: true
-        volumes:
-            - .:/workspace

@@ -1,8 +1,11 @@
 .DS_Store
-.env
+
 .pnpm-store
+node_modules
+
+.env
 token.json
 credentials.json
-node_modules
+
 dist
 test
