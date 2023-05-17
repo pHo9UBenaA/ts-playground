@@ -9,6 +9,9 @@ dependencies:
         version: 1.6.0
 
 devDependencies:
+    '@types/babylonjs':
+        specifier: ^2.4.1
+        version: 2.4.1
     '@types/node':
         specifier: ^18.16.1
         version: 18.16.1
@@ -417,6 +420,16 @@ packages:
         dev: true
         optional: true
 
+    /@types/babylonjs@2.4.1:
+        resolution:
+            {
+                integrity: sha512-vt6db2PxisxsnLvL5holHLV9vMJzELAhFq54syX/tKncTmjeraQSR1W20j9/KYLEpAFU18u76rK8utb8JlUrtQ==,
+            }
+        deprecated: This is a stub types definition for BabylonJS (http://www.babylonjs.com/). BabylonJS provides its own type definitions, so you don't need @types/babylonjs installed!
+        dependencies:
+            babylonjs: 6.0.0
+        dev: true
+
     /@types/node@18.16.1:
         resolution:
             {
@@ -494,7 +507,6 @@ packages:
                 integrity: sha512-K3vv1B+wi6r0uSLOpDkHMK9+UbSSXZP5k2tDxFeX8QzoIwV6iodf75WBqgoRNitzEvOlCSsLWktA8GW6Kq/QMg==,
             }
         requiresBuild: true
-        dev: false
 
     /balanced-match@1.0.2:
         resolution:

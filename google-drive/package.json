@@ -3,12 +3,13 @@
 	"version": "0.0.0",
 	"scripts": {
 		"build": "node esbuild.js",
-		"run": "npm run build; node dist/main.js",
+		"script": "pnpm run build; node dist/main.js",
 		"test": "npx ts-node ./src/test.ts",
-		"_lint": "eslint . --ignore-path .gitignore",
-		"lint": "npm run _lint; npm run _prettier",
-		"lint:fix": "npm run _lint -- --fix; npm run _prettier -- --write",
-		"_prettier": "prettier \".\" --check --ignore-path \".gitignore\""
+		"_lint": "eslint . --ignore-path ../.gitignore",
+		"lint": "pnpm run _lint; pnpm run _prettier",
+		"lint:fix": "pnpm run _lint --fix; pnpm run _prettier --write",
+		"_prettier": "prettier \".\" --check --ignore-path \"../.gitignore\"",
+		"pnpm:devPreinstall": "rm -rf node_modules"
 	},
 	"dependencies": {
 		"@google-cloud/local-auth": "2.1.0",
