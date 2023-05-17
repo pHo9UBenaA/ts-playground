@@ -1,9 +1,9 @@
 const glob = require('glob');
-const entryPoints = glob.sync('./src/ts/*.ts');
+const entryPoints = glob.sync('./src/script/*.ts');
 
 const options = {
 	entryPoints,
-	outbase: './src/ts',
+	outbase: './src/script',
 	outdir: './src/dist',
 	platform: 'browser',
 	external: [],
@@ -22,8 +22,8 @@ build(options).catch((err) => {
 
 // module.exports = {
 //   entry: {
-//     'index' : path.resolve(__dirname, '/src/ts/index.ts'),
-//     'babylon' : path.resolve(__dirname, '/src/ts/babylon.ts')
+//     'index' : path.resolve(__dirname, '/src/script/index.ts'),
+//     'babylon' : path.resolve(__dirname, '/src/script/babylon.ts')
 //   },
 //   output: {
 //     filename: '[name].js',
