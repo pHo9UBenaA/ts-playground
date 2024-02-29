@@ -1,0 +1,23 @@
+{
+	"name": "p5js",
+	"version": "0.0.0",
+	"scripts": {
+		"build": "node esbuild.js",
+		"_lint": "eslint . --ignore-path ../.gitignore",
+		"lint": "pnpm run _lint; pnpm run _prettier",
+		"lint:fix": "pnpm run _lint --fix; pnpm run _prettier --write",
+		"_prettier": "prettier \".\" --check --ignore-path \"../.gitignore\"",
+		"pnpm:devPreinstall": "rm -rf node_modules"
+	},
+	"devDependencies": {
+		"@types/node": "^20.11.9",
+		"axios": "^1.6.7",
+		"esbuild": "^0.17.18",
+		"eslint": "^8.39.0",
+		"eslint-config-prettier": "^8.8.0",
+		"gaxios": "^6.1.1",
+		"prettier": "^2.8.8",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.0.4"
+	}
+}
