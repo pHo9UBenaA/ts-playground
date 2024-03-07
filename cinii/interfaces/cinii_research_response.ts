@@ -1,201 +1,206 @@
 import { DeepPartial } from '../types/utils';
 
 /**
- * WIP
+ * WIP 検証などは行わず取り急ぎ一番深いプロパティはstring型にしている
  * @link https://github.com/pHo9UBenaA/py-playground
  */
 export type CiNiiResearchResponse = DeepPartial<{
-	// '@context': unknown;
+	'@context': string;
 	'@id': string;
-	'@type': unknown;
-	projectIdentifier: { '@type': unknown; '@value': unknown }[];
-	personIdentifier: { '@type': unknown; '@value': unknown }[];
+	'@type': string;
+	projectIdentifier: { '@type': string; '@value': string }[];
+	personIdentifier: { '@type': string; '@value': string }[];
 	productIdentifier: {
-		identifier: { '@type': unknown; '@value': unknown };
-		extra: { type: unknown; value: unknown };
+		identifier: { '@type': string; '@value': string };
+		extra: { type: string; value: string };
 	}[];
-	resourceType: unknown;
-	'dc:title': unknown[];
-	'jpcoar:awardTitle': { '@language': unknown; '@value': unknown }[];
-	'dcterms:alternative': { '@language': unknown; '@value': unknown }[];
+	resourceType: string;
+	'dc:title': { '@language': string; '@value': string }[];
+	'jpcoar:awardTitle': { '@language': string; '@value': string }[];
+	'dcterms:alternative': { '@language': string; '@value': string }[];
 	'foaf:Person': {
-		'foaf:name': { '@language': unknown; '@value': unknown }[];
-		'foaf:familyName': { '@language': unknown; '@value': unknown }[];
-		'foaf:givenName': { '@language': unknown; '@value': unknown }[];
-		'foaf:middleName': { '@language': unknown; '@value': unknown }[];
+		'foaf:name': { '@language': string; '@value': string }[];
+		'foaf:familyName': { '@language': string; '@value': string }[];
+		'foaf:givenName': { '@language': string; '@value': string }[];
+		'foaf:middleName': { '@language': string; '@value': string }[];
 	}[];
 	career: {
 		institution: {
-			institutionIdentifier: { '@type': unknown; '@value': unknown }[];
-			notation: { '@language': unknown; '@value': unknown }[];
+			institutionIdentifier: { '@type': string; '@value': string }[];
+			notation: { '@language': string; '@value': string }[];
 		};
 		department: {
-			departmentIdentifier: { '@type': unknown; '@value': unknown }[];
-			notation: { '@language': unknown; '@value': unknown }[];
+			departmentIdentifier: { '@type': string; '@value': string }[];
+			notation: { '@language': string; '@value': string }[];
 		};
 		jobTitle: {
-			jobTitleIdentifier: { '@type': unknown; '@value': unknown }[];
-			notation: { '@language': unknown; '@value': unknown }[];
+			jobTitleIdentifier: { '@type': string; '@value': string }[];
+			notation: { '@language': string; '@value': string }[];
 		};
-		since: unknown;
-		until: unknown;
+		since: string;
+		until: string;
 	}[];
-	field: { keyword: { language: unknown; textList: unknown[] }[] }[];
-	'dc:language': unknown;
+	field: { keyword: { language: string; textList: string[] }[] }[];
+	'dc:language': string;
 	description: {
-		type: unknown;
-		notation: { '@language': unknown; '@value': unknown }[];
-		abstractLicenseFlag: { '@value': unknown };
+		type: string;
+		notation: { '@language': string; '@value': string }[];
+		abstractLicenseFlag: { '@value': string };
 	}[];
 	researcher: {
 		'@id': string;
-		'@type': unknown;
-		personIdentifier: { '@type': unknown; '@value': unknown }[];
-		name: { '@language': unknown; '@value': unknown }[];
-		affiliation: { '@language': unknown; '@value': unknown }[];
-		role: unknown;
+		'@type': string;
+		personIdentifier: { '@type': string; '@value': string }[];
+		name: { '@language': string; '@value': string }[];
+		affiliation: { '@language': string; '@value': string }[];
+		role: string;
 	}[];
-	since: unknown;
-	until: unknown;
+	since: string;
+	until: string;
 	institution: {
-		institutionIdentifier: { '@type': unknown; '@value': unknown }[];
-		notation: { '@language': unknown; '@value': unknown }[];
+		institutionIdentifier: { '@type': string; '@value': string }[];
+		notation: { '@language': string; '@value': string }[];
 	}[];
-	fundingProgram: { notation: { '@language': unknown; '@value': unknown }[] }[];
+	fundingProgram: { notation: { '@language': string; '@value': string }[] }[];
 	creator: {
 		'@id': string;
-		'@type': unknown;
-		personIdentifier: { '@type': unknown; '@value': unknown }[];
-		'foaf:name': { '@language': unknown; '@value': unknown }[];
-		'jpcoar:affiliationName': { '@language': unknown; '@value': unknown }[];
-		role: unknown;
+		'@type': string;
+		personIdentifier: { '@type': string; '@value': string }[];
+		'foaf:name': { '@language': string; '@value': string }[];
+		'jpcoar:affiliationName': { '@language': string; '@value': string }[];
+		role: string;
 	}[];
 	contributor: {
 		'@id': string;
-		'@type': unknown;
-		personIdentifier: { '@type': unknown; '@value': unknown }[];
-		'foaf:name': { '@language': unknown; '@value': unknown }[];
-		'jpcoar:affiliationName': { '@language': unknown; '@value': unknown }[];
-		role: unknown;
+		'@type': string;
+		personIdentifier: { '@type': string; '@value': string }[];
+		'foaf:name': { '@language': string; '@value': string }[];
+		'jpcoar:affiliationName': { '@language': string; '@value': string }[];
+		role: string;
 	}[];
 	publication: {
-		publicationIdentifier: { '@type': unknown; '@value': unknown }[];
-		'prism:publicationName': { '@language': unknown; '@value': unknown }[];
-		'dc:publisher': { '@language': unknown; '@value': unknown }[];
-		'prism:publicationDate': unknown;
-		'prism:volume': unknown;
-		'prism:number': unknown;
-		'prism:startingPage': unknown;
-		'prism:endingPage': unknown;
-		'jpcoar:numPages': unknown;
-		foreign: unknown;
-		jointInternationalResearch: unknown;
+		publicationIdentifier: { '@type': string; '@value': string }[];
+		'prism:publicationName': { '@language': string; '@value': string }[];
+		'dc:publisher': { '@language': string; '@value': string }[];
+		'prism:publicationDate': string;
+		'prism:volume': string;
+		'prism:number': string;
+		'prism:startingPage': string;
+		'prism:endingPage': string;
+		'jpcoar:numPages': string;
+		foreign: string;
+		jointInternationalResearch: string;
 	};
-	reviewed: unknown;
-	'dcterms:accessRights': unknown;
-	'ndl:dissertationNumber': unknown;
-	'ndl:dateGranted': unknown;
-	'ndl:degreeName': unknown;
+	reviewed: string;
+	'dcterms:accessRights': string;
+	'ndl:dissertationNumber': string;
+	'ndl:dateGranted': string;
+	'ndl:degreeName': string;
 	degreeAwardInstitution: {
-		institutionIdentifier: { '@type': unknown; '@value': unknown }[];
-		'jpcoar:degreeGrantorName': { '@language': unknown; '@value': unknown }[];
+		institutionIdentifier: { '@type': string; '@value': string }[];
+		'jpcoar:degreeGrantorName': { '@language': string; '@value': string }[];
 	};
-	'jpcoar:conferenceName': unknown;
-	'jpcoar:conferencePlace': unknown;
+	'jpcoar:conferenceName': string;
+	'jpcoar:conferencePlace': string;
 	'jpcoar:conferenceDate': {
-		'jpcoar:startDay': unknown;
-		'jpcoar:startMonth': unknown;
-		'jpcoar:startYear': unknown;
-		'jpcoar:endDay': unknown;
-		'jpcoar:endMonth': unknown;
-		'jpcoar:endYear': unknown;
+		'jpcoar:startDay': string;
+		'jpcoar:startMonth': string;
+		'jpcoar:startYear': string;
+		'jpcoar:endDay': string;
+		'jpcoar:endMonth': string;
+		'jpcoar:endYear': string;
 	};
-	'jpcoar:conferenceSponsor': unknown;
-	invited: unknown;
-	'prism:edition': unknown;
-	printing: unknown;
-	'dc:date': unknown;
+	'jpcoar:conferenceSponsor': string;
+	invited: string;
+	'prism:edition': string;
+	printing: string;
+	'dc:date': string;
 	'dcterms:medium': {
-		generalMaterialDesignationCode: unknown;
-		specificMaterialDesignationCode: unknown;
+		generalMaterialDesignationCode: string;
+		specificMaterialDesignationCode: string;
 	};
-	'dc:creator': unknown;
-	publicationCountryCode: unknown;
+	'dc:creator': string;
+	publicationCountryCode: string;
 	'dcterms:publisher': {
-		'dc:publisher': unknown;
-		publicationPlace: unknown;
-		'prism:publicationDate': unknown;
+		'dc:publisher': string;
+		publicationPlace: string;
+		'prism:publicationDate': string;
 	}[];
-	'dc:subject': { '@type': unknown; '@value': unknown }[];
-	'cinii:size': unknown;
-	'dcterms:extent': unknown;
-	publicationStatusCode: unknown;
-	publicationPeriodicityCode: unknown;
-	publicationRegularityCode: unknown;
-	serialsTypeCode: unknown;
-	'jpcoar:extent': unknown[];
-	format: unknown[];
-	'datacite:version': unknown;
-	'dc:rights': unknown[];
-	url: { notation: { '@language': unknown; '@value': unknown }[]; '@id': string }[];
-	createdAt: unknown;
-	modifiedAt: unknown;
-	'foaf:topic': { '@id': string; 'dc:title': unknown[] }[];
+	'dc:subject': { '@type': string; '@value': string }[];
+	'cinii:size': string;
+	'dcterms:extent': string;
+	publicationStatusCode: string;
+	publicationPeriodicityCode: string;
+	publicationRegularityCode: string;
+	serialsTypeCode: string;
+	'jpcoar:extent': string[];
+	format: string[];
+	'datacite:version': string;
+	'dc:rights': string[];
+	url: { notation: { '@language': string; '@value': string }[]; '@id': string }[];
+	createdAt: string;
+	modifiedAt: string;
+	'foaf:topic': { '@id': string; 'dc:title': string }[];
 	'dcterms:subject': {
-		subjectScheme: unknown;
-		notation: { '@language': unknown; '@value': unknown }[];
+		subjectScheme: string;
+		notation: { '@language': string; '@value': string }[];
 	};
-	'cinii:note': { '@language': unknown; '@value': unknown }[];
+	'cinii:note': { '@language': string; '@value': string }[];
 	project: {
 		'@id': string;
-		'@type': unknown;
-		projectIdentifier: { '@type': unknown; '@value': unknown }[];
-		notation: { '@language': unknown; '@value': unknown }[];
-		role: unknown;
+		'@type': string;
+		projectIdentifier: { '@type': string; '@value': string }[];
+		notation: { '@language': string; '@value': string }[];
+		role: string;
 	}[];
 	relatedProject: {
 		'@id': string;
-		'@type': unknown;
-		projectIdentifier: { '@type': unknown; '@value': unknown }[];
-		relationType: unknown;
-		notation: { '@language': unknown; '@value': unknown }[];
+		'@type': string;
+		projectIdentifier: { '@type': string; '@value': string }[];
+		relationType: string;
+		notation: { '@language': string; '@value': string }[];
 	}[];
 	product: {
 		'@id': string;
-		'@type': unknown;
-		resourceType: unknown;
-		productIdentifier: { '@type': unknown; '@value': unknown }[];
-		notation: { '@language': unknown; '@value': unknown }[];
-		relation: { type: unknown; detail: unknown };
+		'@type': string;
+		resourceType: string;
+		productIdentifier: { '@type': string; '@value': string }[];
+		notation: { '@language': string; '@value': string }[];
+		relation: { type: string; detail: string }[];
 	}[];
 	relatedProduct: {
 		'@id': string;
-		'@type': unknown;
-		productIdentifier: { '@type': unknown; '@value': unknown }[];
-		resourceType: unknown;
-		relationType: unknown[];
-		'jpcoar:relatedTitle': { '@language': unknown; '@value': unknown }[];
+		'@type': string;
+		productIdentifier: { '@type': string; '@value': string }[];
+		resourceType: string;
+		relationType: string[];
+		'jpcoar:relatedTitle': { '@language': string; '@value': string }[];
 	}[];
-	dataSourceIdentifier: { '@type': unknown; '@value': unknown }[];
-	'dcterms:tableOfContents': { language: unknown; 'dcterms:title': unknown[] }[];
+	dataSourceIdentifier: { '@type': string; '@value': string }[];
+	'dcterms:tableOfContents': { language: string; 'dcterms:title': string[] }[];
 	grant: {
-		grantIdentifier: { '@type': unknown; '@value': unknown }[];
-		'jpcoar:fundingStream': { '@language': unknown; '@value': unknown }[];
+		grantIdentifier: { '@type': string; '@value': string }[];
+		'jpcoar:fundingStream': { '@language': string; '@value': string }[];
 	};
 	allocationClassification: {
-		totalCost: { amount: unknown; unit: unknown; currency: unknown };
+		totalCost: { amount: string; unit: string; currency: string };
 		breakdownCost: {
-			notation: { '@language': unknown; '@value': unknown }[];
-			amount: unknown;
-			unit: unknown;
-			currency: unknown;
+			notation: { '@language': string; '@value': string }[];
+			amount: string;
+			unit: string;
+			currency: string;
 		}[];
 	}[];
+
+	/**
+	 * CiNiiResearchのJSON-LDのフォーマット仕様では「配分額」が「allocationClassification」と記載されていたが、返り値を見る限り「allocationAmount」
+	 * @link https://support.nii.ac.jp/ja/cir/r_json#format
+	 */
+	allocationAmount: string;
 
 	/**
 	 * CiNii ResearchのJSON-LDのフォーマット仕様には記載がないが「プロジェクト」にて返り値が存在する
 	 * @link https://support.nii.ac.jp/ja/cir/r_json#format
 	 */
-	projectStatus: unknown;
-	allocationAmount: unknown;
+	projectStatus: string;
 }>;
