@@ -135,7 +135,11 @@ type ResourceType =
 type RgProgramType = 'MOONSHOT';
 
 export type OpenSearchRequestQuery = {
-	/** アプリケーションID */
+	/**
+	 * アプリケーションID
+	 * 仕様では必須になっているが、確認時点ではなくても問題なかった
+	 * @see { @link https://support.nii.ac.jp/ja/cir/r_opensearch }
+	 */
 	appid?: string;
 
 	/**
