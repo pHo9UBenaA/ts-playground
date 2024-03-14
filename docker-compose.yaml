@@ -4,5 +4,8 @@ services:
             context: .
             dockerfile: docker/node/Dockerfile
         tty: true
+        dns:
+            - 8.8.8,8
+            - 8.8.4.4
         volumes:
             - .:/workspace
