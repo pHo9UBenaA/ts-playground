@@ -14,14 +14,14 @@ export type OpenSearchResponse = {
 	 */
 	link: Link;
 	/** 検索日時 */
-	'dc:date';
+	'dc:date': string;
 	/** 検索結果総数 */
 	'opensearch:totalResults': number;
 	/**
 	 * 開始番号
 	 * @description 検索結果のうち、何軒目のデータから取得しているか
 	 */
-	'opensearch:startIndex': SVGAnimatedNumberList;
+	'opensearch:startIndex': number;
 	/** 件数 */
 	'opensearch:itemsPerPage': number;
 	items: Items[];

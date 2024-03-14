@@ -10,14 +10,19 @@
 		"pnpm:devPreinstall": "rm -rf node_modules"
 	},
 	"devDependencies": {
-		"@types/node": "^20.11.9",
-		"axios": "^1.6.7",
+		"@types/node": "^20.11.1",
+		"@types/stream-chain": "^2.0.4",
+		"@types/stream-json": "^1.7.7",
 		"esbuild": "^0.17.18",
 		"eslint": "^8.39.0",
 		"eslint-config-prettier": "^8.8.0",
+		"exceljs": "^4.4.0",
 		"gaxios": "^6.1.1",
 		"prettier": "^2.8.8",
+		"stream-chain": "^2.2.5",
+		"stream-json": "^1.8.0",
 		"ts-node": "^10.9.2",
-		"typescript": "^5.0.4"
+		"typescript": "^5.3.3",
+		"xlsx": "^0.18.5"
 	}
 }

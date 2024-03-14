@@ -20,13 +20,13 @@ type ResponseLangType = 'ja' | 'en';
  *  - 4: 関連度順
  *  - 10: 被引用件数：多い順（論文のみ）
  */
-type SortType = 0 | 1 | 4 | 10;
+export type SortType = 0 | 1 | 4 | 10;
 
 /**
  * ページ当たり表示件数
  * @default 20
  */
-type CountType = 20 | 50 | 100 | 200;
+export type CountType = 20 | 50 | 100 | 200;
 
 /**
  * データソース種別
@@ -44,7 +44,7 @@ type CountType = 20 | 50 | 100 | 200;
  * - DBPEDIA: DBpedia
  * - RUDA: 立教大学 社会調査データアーカイブ
  */
-type DataSourceType =
+export type DataSourceType =
 	| 'KAKEN'
 	| 'JALC'
 	| 'IRDB'
@@ -56,7 +56,16 @@ type DataSourceType =
 	| 'NINJAL'
 	| 'IDR'
 	| 'DBPEDIA'
-	| 'RUDA';
+	| 'RUDA'
+	// クエリ仕様に記載はないが以下のデータソースも存在する（網羅できているかは不明）
+	| 'CIA'
+	| 'KAKEN'
+	| 'NDL'
+	| 'NDL_DC'
+	| 'INTEGBIO'
+	| 'PUBMED'
+	| 'NIKKEI_BP'
+	| 'MDR';
 
 /**
  * 資源種別
@@ -126,8 +135,12 @@ type ResourceType =
 type RgProgramType = 'MOONSHOT';
 
 export type OpenSearchRequestQuery = {
-	/** アプリケーションID */
-	appid: string;
+	/**
+	 * アプリケーションID
+	 * 仕様では必須になっているが、確認時点ではなくても問題なかった
+	 * @see { @link https://support.nii.ac.jp/ja/cir/r_opensearch }
+	 */
+	appid?: string;
 
 	/**
 	 * レスポンスフォーマット
@@ -255,7 +268,8 @@ export type OpenSearchRequestQuery = {
 	doi?: string;
 
 	/** データソース種別 */
-	dataSourceType?: DataSourceType | DataSourceType[];
+	// dataSourceType?: DataSourceType | DataSourceType[];
+	dataSourceType?: string | string[];
 
 	/** 言語種別 */
 	languageType?: string;

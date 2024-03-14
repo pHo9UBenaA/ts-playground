@@ -9,3 +9,11 @@ credentials.json
 
 dist
 test
+
+*count*.json
+*debug*.json
+
+*.txt
+*.json
+*.jsonl
+*.xlsx
