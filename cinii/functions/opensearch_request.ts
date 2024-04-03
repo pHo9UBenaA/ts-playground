@@ -45,8 +45,6 @@ const isBatchSizeLimitRange = (batchSizeLimit: number): boolean => {
  * @param searchType - 検索データ種別 ex. articles
  * @param params - ex. { appid: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', format: 'json', q: 'cancer' }
  * @param offset - 取得開始位置（1度目のリクエストのOpenSearchRequestQuery.start） ex. 1
- * @param from - ex. new Date('2024-01-01')
- * @param until - ex. new Date('2024-01-01')
  * @param count - 取得件数（OpenSearchRequestQuery.count） ex. 200
  * @param batchSizeLimit - 一度に取得する件数の上限 ex. 1000
  * @returns
@@ -90,15 +88,13 @@ export const fetchOpenSearchResponse = async (
 		// 次の繰り返しで上限を超える場合は終了
 		const totalCount = responses.reduce((acc, res) => acc + res.items.length, 0);
 		if (totalCount + count > batchSizeLimit) {
-			console.log('上限を超えるため終了')
+			console.log('上限を超えるため終了');
 			break;
 		}
 
 		// 次のページがない場合は終了
 		if (nextOffset >= response['opensearch:totalResults']) {
-			console.log(
-				'次のページがないため終了',
-			);
+			console.log('次のページがないため終了');
 			nextOffset = null;
 			break;
 		}

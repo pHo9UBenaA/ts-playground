@@ -10,6 +10,6 @@ import { CiNiiResearchResponse } from '../interfaces/cinii_research_response';
  */
 export const ciniiResearchRequest = async (url: string): Promise<CiNiiResearchResponse> => {
 	const res = await gaxios.request<CiNiiResearchResponse>({url});
-	await setTimeout(1500);
+	await setTimeout(2000);
 	return res.data;
 };

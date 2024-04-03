@@ -1,10 +1,12 @@
 // cp cinii/.env.example cinii/.env
-// docker compose exec node ./cinii/node_modules/.bin/ts-node ./cinii/script.ts > ./cinii/output.txt
+// docker compose exec node ./cinii/node_modules/.bin/ts-node ./cinii/scripts_3_articles_details_get_author_ids.ts
 
+import * as gaxios from 'gaxios';
 import { createReadStream } from 'fs';
 import { appendFile, writeFile } from 'fs/promises';
-import * as gaxios from 'gaxios';
 import { createInterface } from 'readline';
+import { chain } from 'stream-chain';
+import { withParser } from 'stream-json/streamers/StreamValues';
 import { setTimeout } from 'timers/promises';
 import { CiNiiResearchResponse } from './interfaces/cinii_research_response';
 import {
@@ -74,12 +76,7 @@ const dataSourceList = [
 
 const sortList = [0, 1, 4, 10] satisfies SortType[];
 
-const yearList = [
-	//2024, 2023, 2022,
-	// 2021,
-	// 2020, 2019,
-	2018, 2017, 2016, 2015, 2014,
-] satisfies number[];
+const yearList = [2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014] as const; // satisfies number[];
 
 const openSearchRequest = async (
 	searchType: SearchType,
@@ -236,7 +233,7 @@ const fetchOpenSearchResponse = async (
 
 const ciniiResearchRequest = async (url: string): Promise<CiNiiResearchResponse> => {
 	// const url = `https://cir.nii.ac.jp/crid/1050001337660654208.json`;
-	const res = await gaxios.request<CiNiiResearchResponse>({ url });
+	const res = await gaxios.request<CiNiiResearchResponse>({url});
 	return res.data;
 };
 
@@ -1020,45 +1017,143 @@ const splitArrayIntoChunk = <T extends string>(array: T[], chunkSize: number): T
 };
 
 const resetAppendFile = async (filename: string) => {
-	await writeFile(`${dirPrefix}/4_author_detail/${filename}`, '');
+	await writeFile(`${dirPrefix}/${filename}`, '');
 };
 
 const appendCiniiResearchResponseData = async (filename: string, data: string) => {
-	await appendFile(`${dirPrefix}/4_author_detail/${filename}`, data + ',\n');
+	await appendFile(`${dirPrefix}/${filename}`, data + ',\n');
 };
 
-const readIdDataAndFetchCiNiiAndSave = async (year: number) => {
-	if (year === 2021 || year === 2022 || year === 2023 || year === 2024) {
-		return;
-	}
+// const { chain } = require('stream-chain');
+// const StreamValues = require('stream-json/streamers/StreamValues');
 
+const readIdDataAndFetchCiNiiAndSave = async (year: (typeof yearList)[number]) => {
 	// const fileStream = createReadStream(`${dirPrefix}/aaa.txt`);
-	const fileStream = createReadStream(
-		`${dirPrefix}/${year}_2_author_ids_in_target_article_details.txt`
-	);
+	// const fileStream = createReadStream(`${dirPrefix}/adjust_filtered_${year}_cancer_articles.json`);
+	// NLJSON形式のデータを一要素ずつ読み込む
+	// const fileStream = chain([
+	// 	createReadStream(
+	// 		`${dirPrefix}/adjust_filtered_${year}_cancer_articles.json`
+	// 		// ).pipe(JSONStream.parse('$*'));
+	// 	),
+	// 	parser(),
+	// 	pick({ filter: /\d+/ }),
+	// 	streamValues(),
+	// ]);
 
-	const appendFilename = `${year}_uniq_target_author_details.jsonl`;
-	const appendDoneIdFilename = `${year}_uniq_target_author_details_done_id.txt`;
+	const appendFilename = `${year}_author_ids_in_target_article_details.txt`;
 	resetAppendFile(appendFilename);
-	resetAppendFile(appendDoneIdFilename);
 
-	const rl = createInterface({
-		input: fileStream,
-		crlfDelay: Infinity,
-	});
+	// const readable = Writable.from(chain([createReadStream(`${dirPrefix}/adjust_filtered_${year}_cancer_articles.json`),parser(), streamValues()]));
 
-	for await (const itemId of rl) {
-		console.log(`${year}: ${itemId}`);
-		if (itemId.trim()) {
-			const response = await ciniiResearchRequest(`${itemId}.json`);
-			await appendFile(
-				`${dirPrefix}/4_author_detail/${appendFilename}`,
-				JSON.stringify(response) + '\n'
-			);
-			await appendFile(`${dirPrefix}/4_author_detail/${appendDoneIdFilename}`, itemId + '\n');
-			await setTimeout(1000);
-		}
+	// await pipeline(
+	// 	readable,
+	// 	async (source) => {
+	// 		console.log(source);
+	// 		setTimeout(2000);
+	// 	}
+	// );
+
+	// await pipeline(
+	// 	createReadStream(`${dirPrefix}/adjust_filtered_${year}_cancer_articles.json`),
+	// 	parser(),
+	// 	async (source) => {
+	// 		console.log(source);
+	// 		await setTimeout(2000);
+	// 	}
+	// );
+
+	const pipeline = chain([
+		createReadStream(`${dirPrefix}/_temp2/adjust_filtered_${year}_cancer_articles.json.jsonl`),
+		withParser(),
+		// streamArray()
+	]);
+
+	let iterateCount = 0;
+	for await (const item of pipeline) {
+		const value: CiNiiResearchResponse = item.value;
+		console.log(value['@id']);
+		const creatorIds = value.creator?.map((v) => v['@id']) ?? [];
+		await appendFile(`${dirPrefix}/${appendFilename}`, creatorIds.join('\n') + '\n');
+		// console.log(JSON.stringify(item, null, 2))
+		// console.log(typeof item.value)
+		// console.log(Array.isArray(item.value))
+		// console.log(typeof item.value[0])
+		// console.log(iterateCount)
+		// iterateCount++;
+		await setTimeout(1);
+		// for await (const item of items) {
+		// 	console.log(item);
+		// 	await setTimeout(2000);
+		// }
+		// // await setTimeout(2000);
+		// break;
 	}
+
+	// await pipeline(
+	// 	stream,
+	// 	// stream(),
+	// 	async (source) => {
+	// 		console.log(source);
+	// 		await setTimeout(2000);
+	// 	}
+	// );
+
+	// stream.on('data', async (data) => {
+	// 	console.log(data);
+	// });
+
+	// fileStream.on('data', async (data) => {
+	// 	const value: CiNiiResearchResponse = data.value;
+	// 	const creatorIds = value.creator.map((v) => v['@id']);
+	// 	await appendFile(
+	// 		`${dirPrefix}/${appendFilename}`,
+	// 		creatorIds.join('\n') + '\n'
+	// 	);
+	// });
+
+	// fileStream.on('end', () => {
+	// 	console.log('終わったよ');
+	// });
+
+	// fileStream.on('error', (err) => {
+	// 	console.error(err);
+	// });
+
+	// try {
+	// 	await pipeline(
+	// 		createReadStream(`${dirPrefix}/adjust_filtered_${year}_cancer_articles.json`),
+	// 		parse('$*'),
+	// 		async (source) => {
+	// 			for await (const data of source) {
+	// 				// await setTimeout(2000);
+
+	// 				if (typeof data === 'string') {
+	// 					throw new Error(`${data}\n考慮漏れ`)
+	// 				}
+
+	// 				try {
+	// 						const test = data as unknown as {value: CiNiiResearchResponse, key: number};
+	// 						const value: CiNiiResearchResponse = test.value;
+	// 						console.log(value['@id'] + 'を開始');
+	// 						const creatorIds = value.creator?.map((v) => v['@id']) ?? [];
+	// 						await appendFile(
+	// 						  `${dirPrefix}/${appendFilename}`,
+	// 						  creatorIds.join('\n') + '\n'
+	// 						);
+	// 						await setTimeout(100)
+	// 				} catch (error) {
+	// 					console.log(data);
+	// 					console.log(error)
+	// 				}
+	// 			}
+	// 		}
+	// 	);
+	// } catch (error) {
+	// 	console.log(error);
+	// }
+
+	// console.log(`${year} 終わったよ`);
 };
 
 // ↑のスクリプトから取得したidのみ保持するファイルを読み込んで、CiNii Research APIを叩いてデータを取得する

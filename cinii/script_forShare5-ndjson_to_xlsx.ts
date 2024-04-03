@@ -1,6 +1,7 @@
 // cp cinii/.env.example cinii/.env
 // docker compose exec node ./cinii/node_modules/.bin/ts-node ./cinii/script.ts > ./cinii/output.txt
 
+import { randomUUID } from 'crypto';
 import { createReadStream } from 'fs';
 import { appendFile, writeFile } from 'fs/promises';
 import * as gaxios from 'gaxios';
@@ -505,6 +506,37 @@ const writeCount = async (filename: string, count: object) => {
 	await writeFile(`${dirPrefix}/${filename}`, JSON.stringify(count, null, 2));
 };
 
+const institutionObjectKeyMapper = {
+	institutionIdentifier: '識別子',
+	notation: '表記',
+};
+
+const departmentObjectKeyMapper = {
+	departmentIdentifier: '識別子',
+	notation: '表記',
+};
+
+const jobTitleObjectKeyMapper = {
+	jobTitleIdentifier: '識別子',
+	notation: '表記',
+};
+
+const keywordObjectKeyMapper = {
+	textList: '表記',
+};
+
+const breakdownCostObjectKeyMapper = {
+	notation: '表記',
+};
+
+const nest2KeyMapper = {
+	institution: institutionObjectKeyMapper,
+	department: departmentObjectKeyMapper,
+	jobTitle: jobTitleObjectKeyMapper,
+	keyword: keywordObjectKeyMapper,
+	breakdownCost: breakdownCostObjectKeyMapper,
+};
+
 const foafPersonKeyMapper = {
 	'foaf:name': '表記',
 	'foaf:familyName': '姓',
@@ -783,21 +815,30 @@ const formatObject = (object: CiNiiResearchResponse) => {
 			// }
 			if (nestKeyMapper.hasOwnProperty(key)) {
 				if (Array.isArray(object[key])) {
+					const nestResultKey = nestKeyMapper[key];
 					object[key].map((v, i) => {
-						const arrayResultKey = `${resultKey}-${i}`;
-						const arrayResultValue = Object.keys(v).reduce((acc, subKey) => {
-							if (nestKeyMapper[key].hasOwnProperty(subKey)) {
-								acc[nestKeyMapper[key][subKey]] = v[subKey];
-							} else {
-								console.log(`除外しました：${key}-${subKey}`);
+						if (typeof v === 'object') {
+							if (Array.isArray(v)) {
 							}
-							return acc;
-						}, {});
-						if (i > 0 && !result[arrayResultKey]) {
-							result[arrayResultKey] = JSON.stringify(arrayResultValue);
+						} else {
+							const primitiveArrayResultKey = `${resultKey}-${nestKeyMapper}-${i}`;
+							result[primitiveArrayResultKey] = v;
 							return;
 						}
-						result[arrayResultKey] = JSON.stringify(arrayResultValue);
+						// const arrayResultKey = `${resultKey}-${i}`;
+						// const arrayResultValue = Object.keys(v).reduce((acc, subKey) => {
+						// 	if (nestKeyMapper[key].hasOwnProperty(subKey)) {
+						// 		acc[nestKeyMapper[key][subKey]] = v[subKey];
+						// 	} else {
+						// 		console.log(`除外しました：${key}-${subKey}`);
+						// 	}
+						// 	return acc;
+						// }, {});
+						// if (i > 0 && !result[arrayResultKey]) {
+						// 	result[arrayResultKey] = JSON.stringify(arrayResultValue);
+						// 	return;
+						// }
+						// result[arrayResultKey] = JSON.stringify(arrayResultValue);
 					});
 				} else {
 					const resultValue = Object.keys(object[key]).reduce((acc, subKey) => {
@@ -830,72 +871,123 @@ const formatObject = (object: CiNiiResearchResponse) => {
 
 const formatObject2 = (object: CiNiiResearchResponse) => {
 	let result = {};
-	Object.keys(object).forEach((key) => {
-		const resultKey = keyMapper[key] || key;
-		if (resultKey === key) {
-			console.log('第一階層の考慮漏れっぽい: ', key);
+	let result2 = {};
+	Object.entries(object).forEach(([key, value]) => {
+		const firstLevelKey = keyMapper[key] || key;
+		// const requireNextLevelKey = `_${firstLevelKey}_`;
+		if (firstLevelKey === key) {
+			throw new Error(`1_第一階層：keyMapperが網羅できていないです：${key}`);
 		}
-		// const propName = prefix ? `${prefix}-${key}` : key;
-		if (typeof object[key] === 'object' && object[key] !== null) {
-			// if (Array.isArray(object[key])) {
-			// 	result[propName] = object[key].map((v) => flattenObject(v)).flat();
-			// 	continue;
-			// }
-			if (nestKeyMapper.hasOwnProperty(key)) {
-				if (Array.isArray(object[key])) {
-					// object[key].map((v, i) => {
-					// 	const arrayResultKey = `${resultKey}-${i}`;
-					// 	const arrayResultValue = Object.keys(v).reduce((acc, subKey) => {
-					// 		if (nestKeyMapper[key].hasOwnProperty(subKey)) {
-					// 			acc[nestKeyMapper[key][subKey]] = v[subKey];
-					// 		} else {
-					// 			console.log(`除外しました：${key}-${subKey}`);
-					// 		}
-					// 		return acc;
-					// 	}, {});
-					// 	if (i > 0 && !result[arrayResultKey]) {
-					// 		result[arrayResultKey] = arrayResultValue;
-					// 		return;
-					// 	}
-					// 	result[arrayResultKey] = arrayResultValue;
-					// });
-					result[resultKey] = [];
-					object[key].map((elm) => {
-						const arrayResultValue = Object.keys(elm).reduce((acc, subKey) => {
-							if (nestKeyMapper[key].hasOwnProperty(subKey)) {
-								acc[nestKeyMapper[key][subKey]] = elm[subKey];
-							} else {
-								console.log(`第二階層の考慮漏れっぽい：${key}-${subKey}`);
-							}
-							return acc;
-						}, {});
-						result[resultKey].push(arrayResultValue);
-					});
-				} else {
-					const resultValue = Object.keys(object[key]).reduce((acc, subKey) => {
-						if (nestKeyMapper[key].hasOwnProperty(subKey)) {
-							acc[nestKeyMapper[key][subKey]] = object[key][subKey];
-						} else {
-							console.log(`第二階層の考慮漏れっぽい：${key}-${subKey}`);
-						}
-						return acc;
-					}, {});
-					result[resultKey] = resultValue;
-				}
-			} else {
-				// if (Array.isArray(object[key])) {
-				// 	// object[key].map((v, i) => {
-				// 	// 	const arrayResultKey = `${resultKey}-${i}`;
-				// 	// 	result[arrayResultKey] = v;
-				// 	// });
-				// 	result[resultKey] = object[key];
-				// } else {
 
-				result[resultKey] = object[key];
+		if (typeof value === 'object') {
+			// dc:titleなどを想定
+			if (Array.isArray(value)) {
+				// 一つの詳細データに対して複数のデータが紐づいている場合、別のテーブルで管理する。
+				// そのため、UUIDを割り振る
+				result[`${firstLevelKey}_UUID`] = randomUUID();
+			} else {
+				// 第二階層
+				// const valueObjectInArrayTypeValue = Object.values(value).some(
+				// 	(v) => typeof v === 'object' && Array.isArray(v)
+				// );
+				// if (valueObjectInArrayTypeValue) {
+				// 	// 一つの詳細データに対して複数のデータが紐づいている場合、別のテーブルで管理する。
+				// 	// そのため、UUIDを割り振る
+				// 	result[requireNextLevelKey] = randomUUID();
+				// } else {
+				// 一つの詳細データに対して1つのオブジェクトデータが紐づいている場合（オブジェクトのValueに配列が含まれないことも上の処理で確認ずみ）
+				Object.entries(value).forEach(([secondKey, secondValue]) => {
+					if (nestKeyMapper.hasOwnProperty(key)) {
+						const secondLevelKey =
+							`${firstLevelKey}_${nestKeyMapper[key][secondKey]}` || secondKey;
+						if (secondLevelKey === secondKey) {
+							throw new Error(
+								`1_第二階層：nestKeyMapperが網羅できていないです：${key}_${secondKey}`
+							);
+						}
+						if (typeof secondValue === 'object') {
+							if (Array.isArray(secondValue)) {
+								result[`${secondLevelKey}_UUID`] = randomUUID();
+							} else {
+								result[`${secondLevelKey}_UUID`] = randomUUID();
+							}
+						} else {
+							result[secondLevelKey] = secondValue;
+						}
+					} else {
+						throw new Error(
+							`2_第二階層：nestKeyMapperが網羅できていないです：${key}_${secondKey}`
+						);
+					}
+				});
 				// }
 			}
 		} else {
-			result[resultKey] = object[key];
+			// @idや@typeなどを想定
+			result[firstLevelKey] = value;
+		}
+	});
+
+	Object.entries(object).forEach(([key, value]) => {
+		const firstLevelKey = keyMapper[key] || key;
+		// const requireNextLevelKey = `_${firstLevelKey}_`;
+		if (firstLevelKey === key) {
+			throw new Error(`1_第一階層：keyMapperが網羅できていないです：${key}`);
+		}
+
+		if (typeof value === 'object') {
+			// dc:titleなどを想定
+			if (Array.isArray(value)) {
+				// 一つの詳細データに対して複数のデータが紐づいている場合、別のテーブルで管理する。
+				// そのため、UUIDを割り振る
+				const result2_value = value.map((v) => {
+					return {
+						uuid: result[`${firstLevelKey}_UUID`],
+						value: v,
+					};
+				});
+				result2[firstLevelKey] = result2_value;
+			} else {
+				// 第二階層
+				// const valueObjectInArrayTypeValue = Object.values(value).some(
+				// 	(v) => typeof v === 'object' && Array.isArray(v)
+				// );
+				// if (valueObjectInArrayTypeValue) {
+				// 	// 一つの詳細データに対して複数のデータが紐づいている場合、別のテーブルで管理する。
+				// 	// そのため、UUIDを割り振る
+				// 	result[requireNextLevelKey] = randomUUID();
+				// } else {
+				// 一つの詳細データに対して1つのオブジェクトデータが紐づいている場合（オブジェクトのValueに配列が含まれないことも上の処理で確認ずみ）
+				Object.entries(value).forEach(([secondKey, secondValue]) => {
+					if (nestKeyMapper.hasOwnProperty(key)) {
+						const secondLevelKey =
+							`${firstLevelKey}_${nestKeyMapper[key][secondKey]}` || secondKey;
+						if (typeof secondValue === 'object') {
+							if (Array.isArray(secondValue)) {
+								if (nest2KeyMapper.hasOwnProperty(secondKey)) {
+									const thirdLevelKey = `${secondLevelKey}_${nest2KeyMapper}`;
+									Object.entries(secondValue).forEach(
+										(thirdKey, thirdValue) => {}
+									);
+								} else {
+									throw new Error(`想定外の値です：${key}_${secondKey}`);
+								}
+							} else {
+							}
+						} else {
+							undefined;
+						}
+					} else {
+						throw new Error(
+							`2_第二階層：nestKeyMapperが網羅できていないです：${key}_${secondKey}`
+						);
+					}
+				});
+				// }
+			}
+		} else {
+			// @idや@typeなどを想定
+			undefined;
 		}
 	});
 
